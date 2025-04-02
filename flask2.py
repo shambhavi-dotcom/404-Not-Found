@@ -1,12 +1,14 @@
-from flask import Flask , render_template,request,redirect
+from flask import Flask , render_template, request, redirect
 import os
+from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
 app =Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI']="sqlite:///todo.db"
+app.config['SQLALCHEMY_DATABASE_URI']=os.environ.get('DATABASE_URL','sqlite:///todo.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
 db=SQLAlchemy(app)
+migrate=Migrate(app,db)
 
 class Todo(db.Model):
     sno = db.Column(db.Integer,primary_key=True)
@@ -31,7 +33,7 @@ def hello():
 
 @app.route('/products')
 def products():
-    return 'this is products page fuck you'
+    return 'this is products page'
 
 @app.route('/delete/<int:sno>')
 def delete(sno):
